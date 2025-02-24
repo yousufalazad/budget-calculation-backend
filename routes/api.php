@@ -2,7 +2,37 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MonthController;
+use App\Http\Controllers\RecurringTypeController;
+use App\Http\Controllers\AuthController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// Public Routes (No Authentication Required)
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+
+// Protected Routes (Require Authentication)
+Route::middleware('auth:sanctum')->group(function () {
+    // User Information
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    // Month Routes
+    Route::prefix('month')->group(function () {
+        Route::get('/', [MonthController::class, 'index']);
+        Route::post('/', [MonthController::class, 'store']);
+        Route::put('/{id}', [MonthController::class, 'update']);
+        Route::delete('/{id}', [MonthController::class, 'destroy']);
+    });
+
+    // Recurring Type Routes
+    Route::prefix('recurring-type')->group(function () {
+        Route::get('/', [RecurringTypeController::class, 'index']);
+        Route::post('/', [RecurringTypeController::class, 'store']);
+        Route::put('/{id}', [RecurringTypeController::class, 'update']);
+        Route::delete('/{id}', [RecurringTypeController::class, 'destroy']);
+    });
+
+    // Logout Route
+    Route::post('/logout', [AuthController::class, 'logout']);
+});
