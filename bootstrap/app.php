@@ -12,14 +12,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // '*';
+        '*';
 
         // Add Sanctum middleware for stateful authentication
-        $middleware->group('api', [
-            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
-        ]);
+        // $middleware->group('api', [
+        //     \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+        //     \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        //     \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
+        // ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

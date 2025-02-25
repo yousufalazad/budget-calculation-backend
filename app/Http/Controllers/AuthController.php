@@ -24,9 +24,8 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string|max:100',
             'email' => 'required|string|email|max:100|unique:users',
-            'password' => 'required|string|min:3',
-            'type' => 'required|string|max:12',
-            // 'azon_id' => 'numeric',
+            'password' => 'required|string|min:8',
+            'type' => 'required|string|in:individual,superadmin,guest'
         ]);
 
         // Create a new user record
