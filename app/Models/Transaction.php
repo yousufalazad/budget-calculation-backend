@@ -11,6 +11,7 @@ class Transaction extends Model
     protected $fillable = [
         'user_id',
         'account_id',
+        'title',
         'type',
         'amount',
         'recurring_type_id',
@@ -23,4 +24,24 @@ class Transaction extends Model
         'created_at',
         'updated_at'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function month()
+    {
+        return $this->belongsTo(Month::class);
+    }
+
+    public function account()
+    {
+        return $this->belongsTo(Account::class);
+    }
+
+    public function recurringType()
+    {
+        return $this->belongsTo(RecurringType::class);
+    }
 }

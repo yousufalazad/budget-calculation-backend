@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TransactionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MonthController;
@@ -31,6 +32,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [RecurringTypeController::class, 'store']);
         Route::put('/{id}', [RecurringTypeController::class, 'update']);
         Route::delete('/{id}', [RecurringTypeController::class, 'destroy']);
+    });
+
+    Route::prefix('transactions')->group(function () {
+        Route::get('/', [TransactionController::class, 'index']);
+        Route::post('/', [TransactionController::class, 'store']);
+        Route::put('/{id}', [TransactionController::class, 'update']);
+        Route::delete('/{id}', [TransactionController::class, 'destroy']);
     });
 
     // Logout Route

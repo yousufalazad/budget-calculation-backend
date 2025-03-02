@@ -3,63 +3,70 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
+use App\Models\Month;
+use App\Models\RecurringType;
+use App\Models\Account;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class TransactionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $transactions = Transaction::with(['user', 'account', 'recurringType'])->get();
+        return response()->json($transactions);
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+       
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
-    }
+        $validatedData = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'account_id' => 'required|exists:accounts,id',
+            'title' => 'required|string',
+            'type' => 'required|in:income,expense',
+            'amount' => 'required|numeric|min:0',
+            'recurring_type_id' => 'nullable|exists:recurring_types,id',
+            'start_date' => 'nullable|date',
+            'notes' => 'nullable|string',
+            'is_active' => 'nullable|boolean'
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
+        $transaction = Transaction::create($validatedData);
+        return response()->json($transaction, Response::HTTP_CREATED);
+    }
+        
     public function show(Transaction $transaction)
     {
-        //
+        return response()->json($transaction);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Transaction $transaction)
     {
-        //
+        
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Transaction $transaction)
     {
-        //
-    }
+        $validatedData = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'account_id' => 'required|exists:accounts,id',
+            'title' => 'required|string',
+            'type' => 'required|in:income,expense',
+            'amount' => 'required|numeric|min:0',
+            'recurring_type_id' => 'nullable|exists:recurring_types,id',
+            'start_date' => 'required|date',
+            'notes' => 'nullable|string',
+            'is_active' => 'boolean'
+        ]);
 
-    /**
-     * Remove the specified resource from storage.
-     */
+        $transaction->update($validatedData);
+        return response()->json($transaction);
+    }
     public function destroy(Transaction $transaction)
     {
-        //
+        $transaction->delete();
+        return response()->json(['message' => 'Transaction deleted successfully']);
     }
 }
