@@ -11,6 +11,13 @@ use App\Http\Controllers\AuthController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+Route::prefix('transactions')->group(function () {
+    Route::get('/', [TransactionController::class, 'index']);
+    Route::post('/', [TransactionController::class, 'store']);
+    Route::put('/{id}', [TransactionController::class, 'update']);
+    Route::delete('/{id}', [TransactionController::class, 'destroy']);
+});
+
 // Protected Routes (Require Authentication)
 Route::middleware('auth:sanctum')->group(function () {
     // User Information
@@ -34,12 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/{id}', [RecurringTypeController::class, 'destroy']);
     });
 
-    Route::prefix('transactions')->group(function () {
-        Route::get('/', [TransactionController::class, 'index']);
-        Route::post('/', [TransactionController::class, 'store']);
-        Route::put('/{id}', [TransactionController::class, 'update']);
-        Route::delete('/{id}', [TransactionController::class, 'destroy']);
-    });
+    
 
     // Logout Route
     Route::post('/logout', [AuthController::class, 'logout']);

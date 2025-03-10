@@ -9,13 +9,17 @@ use App\Models\Account;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
 {
     public function index()
     {
+        Log::info('Getting all transactions');
         $transactions = Transaction::with(['user', 'account', 'recurringType'])->get();
         return response()->json($transactions);
+        
     }
     public function create()
     {
@@ -23,6 +27,7 @@ class TransactionController extends Controller
     }
     public function store(Request $request)
     {
+        //$userId = Auth::user()->id;
         $validatedData = $request->validate([
             'user_id' => 'required|exists:users,id',
             'account_id' => 'required|exists:accounts,id',
@@ -35,7 +40,18 @@ class TransactionController extends Controller
             'is_active' => 'nullable|boolean'
         ]);
 
-        $transaction = Transaction::create($validatedData);
+        $transaction = Transaction::create([
+            'user_id' => $validatedData['user_id'],
+            'account_id' => $validatedData['account_id'],
+            'title' => $validatedData['title'],
+            'type' => $validatedData['type'],
+            'amount' => $validatedData['amount'],
+            'recurring_type_id' => $validatedData['recurring_type_id'],
+            'start_date' => $validatedData['start_date'],
+            'notes' => $validatedData['notes'],
+            'is_active' => $validatedData['is_active']
+        ]);
+        
         return response()->json($transaction, Response::HTTP_CREATED);
     }
         
@@ -61,7 +77,17 @@ class TransactionController extends Controller
             'is_active' => 'boolean'
         ]);
 
-        $transaction->update($validatedData);
+        $transaction->update([
+            'user_id' => $validatedData['user_id'],
+            'account_id' => $validatedData['account_id'],
+            'title' => $validatedData['title'],
+            'type' => $validatedData['type'],
+            'amount' => $validatedData['amount'],
+            'recurring_type_id' => $validatedData['recurring_type_id'],
+            'start_date' => $validatedData['start_date'],
+            'notes' => $validatedData['notes'],
+            'is_active' => $validatedData['is_active']
+        ]);
         return response()->json($transaction);
     }
     public function destroy(Transaction $transaction)
